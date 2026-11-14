@@ -312,6 +312,7 @@ let listening = false;
 let waitingForCommand = false;
 let speaking = false;
 let restartTimer = null;
+  let launchTab = null;
 
 const websites = {
   google: "https://www.google.com",
@@ -391,9 +392,13 @@ function normalize(text) {
 
 function navigate(url) {
   statusBox.textContent = "OPENING WEBSITE...";
-  window.location.assign(url);
-}
 
+  if (launchTab && !launchTab.closed) {
+    launchTab.location.href = url;
+  } else {
+    speak("Please activate voice again to open a new browser tab.");
+  }
+}
 function searchGoogle(query) {
   const cleanQuery = query.trim();
 
@@ -584,6 +589,7 @@ function startListening() {
   }
 
   if (listening) return;
+  launchTab = window.open("about:blank", "_blank");
 
   listening = true;
   waitingForCommand = false;
