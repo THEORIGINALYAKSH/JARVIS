@@ -163,13 +163,43 @@ const statusBox = document.getElementById("status");
 const responseBox = document.getElementById("response");
 const commandInput = document.getElementById("command");
 
+let recognition = null;
+let listening = false;
+let waitingForCommand = false;
+let speaking = false;
+
+function startRecognition() {
+  if (!listening || speaking || !recognition) return;
+
+  try {
+    recognition.start();
+  } catch (error) {
+    // Recognition may already be starting.
+  }
+}
+
 function speak(message) {
   speechSynthesis.cancel();
 
+  if (recognition) {
+    speaking = true;
+    try { recognition.stop(); } catch (e) {}
+  }
+
   const speech = new SpeechSynthesisUtterance(message);
   speech.lang = "en-IN";
-  speech.rate = 1;
+  speech.rate = 0.95;
   speech.pitch = 0.9;
+
+  speech.onend = function() {
+    speaking = false;
+    startRecognition();
+  };
+
+  speech.onerror = function() {
+    speaking = false;
+    startRecognition();
+  };
 
   speechSynthesis.speak(speech);
 }
@@ -229,13 +259,11 @@ function processCommand() {
   }
 
   else if (command.includes("time")) {
-    const now = new Date();
     respond("The current time is " +
-      now.toLocaleTimeString("en-IN"));
+      new Date().toLocaleTimeString("en-IN"));
   }
 
-  else if (command.includes("hello") ||
-           command.includes("hey jarvis")) {
+  else if (command.includes("hello")) {
     respond("Hello. All systems are functioning normally.");
   }
 
@@ -260,36 +288,63 @@ function startListening() {
     window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
-    respond("Voice recognition is not supported in this browser. Please try Chrome.");
+    respond("Voice recognition is not supported. Please use Chrome.");
     return;
   }
 
-  const recognition = new SpeechRecognition();
+  if (listening) return;
 
+  recognition = new SpeechRecognition();
   recognition.lang = "en-IN";
-  recognition.continuous = false;
+  recognition.continuous = true;
   recognition.interimResults = false;
 
-  statusBox.textContent = "LISTENING...";
+  listening = true;
+  waitingForCommand = false;
 
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    commandInput.value = transcript;
-    processCommand();
-  };
-
-  recognition.onerror = function() {
-    statusBox.textContent = "VOICE ERROR";
-    respond("I could not hear you clearly. Please try again.");
-  };
-
-  recognition.onend = function() {
-    if (statusBox.textContent === "LISTENING...") {
-      statusBox.textContent = "SYSTEM ONLINE";
+  recognition.onstart = function() {
+    if (!speaking) {
+      statusBox.textContent = "LISTENING FOR HELLO JARVIS...";
     }
   };
 
-  recognition.start();
+  recognition.onresult = function(event) {
+    const result =
+      event.results[event.results.length - 1];
+
+    if (!result.isFinal) return;
+
+    const transcript = result[0].transcript
+      .trim()
+      .toLowerCase();
+
+    if (!waitingForCommand) {
+      if (transcript.includes("hello jarvis")) {
+        waitingForCommand = true;
+
+        respond("Yes, Yaksh. What can I do for you?");
+      }
+    } else {
+      waitingForCommand = false;
+      commandInput.value = transcript;
+      processCommand();
+    }
+  };
+
+  recognition.onerror = function(event) {
+    if (event.error === "not-allowed") {
+      listening = false;
+      statusBox.textContent = "MICROPHONE PERMISSION DENIED";
+    }
+  };
+
+  recognition.onend = function() {
+    if (listening && !speaking) {
+      setTimeout(startRecognition, 500);
+    }
+  };
+
+  startRecognition();
 }
 
 commandInput.addEventListener("keydown", function(event) {
