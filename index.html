@@ -1,684 +1,538 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS 2.0 | Personal AI Assistant</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071522">
+<title>JARVIS 3.0 | Personal Assistant</title>
 <style>
-:root {
-  --cyan: #54e5ff;
-  --blue: #168cff;
-  --bg: #050b14;
-  --panel: rgba(12, 30, 49, .88);
-  --text: #e3faff;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% 35%, #12334d 0%, #071523 45%, #03070d 100%);
-  color: var(--text);
-  font-family: "Segoe UI", Arial, sans-serif;
-  padding: 25px;
-}
-
-.container {
-  max-width: 950px;
-  margin: auto;
-  text-align: center;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.logo {
-  color: var(--cyan);
-  letter-spacing: 8px;
-  font-size: 30px;
-  text-shadow: 0 0 18px var(--blue);
-}
-
-.online {
-  color: #65ffb0;
-  font-size: 12px;
-  letter-spacing: 2px;
-}
-
-.subtitle {
-  color: #83aabd;
-  font-size: 11px;
-  letter-spacing: 4px;
-  margin-top: 8px;
-}
-
-.reactor {
-  width: 210px;
-  height: 210px;
-  margin: 48px auto 25px;
-  border-radius: 50%;
-  border: 2px solid var(--cyan);
-  display: grid;
-  place-items: center;
-  position: relative;
-  box-shadow: 0 0 35px #008dff, inset 0 0 35px #008dff;
-  animation: glow 3s infinite ease-in-out;
-}
-
-.reactor:before,
-.reactor:after {
-  content: "";
-  position: absolute;
-  border: 1px solid #39cfff;
-  border-radius: 50%;
-}
-
-.reactor:before {
-  inset: 15px;
-}
-
-.reactor:after {
-  inset: 31px;
-}
-
-.core {
-  font-size: 68px;
-  color: var(--cyan);
-  text-shadow: 0 0 25px white;
-  z-index: 1;
-}
-
-@keyframes glow {
-  50% {
-    box-shadow: 0 0 65px #008dff, inset 0 0 50px #008dff;
-  }
-}
-
-.status {
-  color: var(--cyan);
-  letter-spacing: 3px;
-  font-size: 13px;
-  min-height: 20px;
-  margin: 18px;
-}
-
-.panel {
-  background: var(--panel);
-  border: 1px solid #1b6685;
-  border-radius: 14px;
-  padding: 22px;
-  margin: 18px 0;
-  box-shadow: 0 0 20px rgba(0, 170, 255, .08);
-}
-
-.response {
-  min-height: 65px;
-  color: #c8f4ff;
-  line-height: 1.7;
-}
-
-input {
-  width: 72%;
-  max-width: 550px;
-  padding: 15px;
-  border-radius: 8px;
-  background: #071522;
-  border: 1px solid #258db6;
-  color: white;
-  font-size: 15px;
-  outline: none;
-}
-
-button {
-  padding: 13px 18px;
-  margin: 6px;
-  border: 1px solid #39cfff;
-  border-radius: 8px;
-  background: #0b2638;
-  color: #80eaff;
-  cursor: pointer;
-  font-weight: 600;
-  transition: .2s;
-}
-
-button:hover {
-  background: #16445e;
-  box-shadow: 0 0 15px #00aaff;
-}
-
-.primary {
-  padding: 17px 35px;
-  font-size: 15px;
-  margin: 18px;
-}
-
-.stop {
-  border-color: #ff7272;
-  color: #ffaaaa;
-}
-
-.section-title {
-  color: var(--cyan);
-  letter-spacing: 2px;
-  font-size: 13px;
-  margin-bottom: 15px;
-}
-
-.history {
-  text-align: left;
-  max-height: 190px;
-  overflow-y: auto;
-  color: #b8dce9;
-  font-size: 13px;
-}
-
-.history p {
-  padding: 9px;
-  border-bottom: 1px solid #183d52;
-  overflow-wrap: anywhere;
-}
-
-.hint {
-  color: #7494a7;
-  font-size: 12px;
-  line-height: 1.8;
-}
-
-footer {
-  margin-top: 35px;
-  color: #53758b;
-  font-size: 11px;
-  letter-spacing: 2px;
-}
-
-@media(max-width:600px) {
-  body { padding: 14px; }
-  .logo { font-size: 23px; }
-  input { width: 100%; }
-  .reactor { width: 175px; height: 175px; }
-}
+:root{--cyan:#54e5ff;--blue:#168cff;--bg:#050b14;--panel:rgba(12,30,49,.9);--text:#e3faff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 30%,#12334d 0%,#071523 48%,#03070d 100%);color:var(--text);font-family:Segoe UI,Arial,sans-serif;padding:22px}
+.container{max-width:950px;margin:auto;text-align:center}header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}.logo{color:var(--cyan);letter-spacing:8px;font-size:30px;text-shadow:0 0 18px var(--blue)}.online{color:#65ffb0;font-size:12px;letter-spacing:2px}.subtitle{color:#83aabd;font-size:11px;letter-spacing:4px;margin-top:8px}
+.reactor{width:195px;height:195px;margin:38px auto 22px;border-radius:50%;border:2px solid var(--cyan);display:grid;place-items:center;position:relative;box-shadow:0 0 35px #008dff,inset 0 0 35px #008dff;animation:glow 3s infinite ease-in-out}.reactor:before,.reactor:after{content:"";position:absolute;border:1px solid #39cfff;border-radius:50%}.reactor:before{inset:15px}.reactor:after{inset:31px}.core{font-size:65px;color:var(--cyan);text-shadow:0 0 25px white;z-index:1}@keyframes glow{50%{box-shadow:0 0 60px #008dff,inset 0 0 48px #008dff}}
+.status{color:var(--cyan);letter-spacing:3px;font-size:12px;min-height:20px;margin:15px}.panel{background:var(--panel);border:1px solid #1b6685;border-radius:14px;padding:20px;margin:16px 0;box-shadow:0 0 20px rgba(0,170,255,.08)}.section-title{color:var(--cyan);letter-spacing:2px;font-size:12px;margin-bottom:14px}.response{min-height:52px;color:#c8f4ff;line-height:1.7}
+input{width:min(70%,550px);padding:14px;border-radius:8px;background:#071522;border:1px solid #258db6;color:white;font-size:15px;outline:none}button,.launch-link{display:inline-block;padding:12px 17px;margin:6px;border:1px solid #39cfff;border-radius:8px;background:#0b2638;color:#80eaff;cursor:pointer;font-weight:600;font-size:13px;text-decoration:none;transition:.2s}button:hover,.launch-link:hover{background:#16445e;box-shadow:0 0 15px #00aaff}.primary{padding:16px 28px;font-size:14px;margin:15px 6px}.stop{border-color:#ff7272;color:#ffaaaa}.action-panel{border-color:#4abf94;background:rgba(8,42,43,.85)}.launch-link{background:#124637;border-color:#63efb5;color:#c6ffe5;padding:15px 22px}.hint,.small-note{color:#88a9b9;font-size:12px;line-height:1.8}.history{text-align:left;max-height:190px;overflow-y:auto;color:#b8dce9;font-size:13px}.history p{padding:8px;border-bottom:1px solid #183d52;margin:0;overflow-wrap:anywhere}footer{margin-top:28px;color:#53758b;font-size:10px;letter-spacing:2px}[hidden]{display:none!important}
+@media(max-width:600px){body{padding:12px}.logo{font-size:23px}.reactor{width:165px;height:165px}input{width:100%}}
 </style>
 </head>
-
 <body>
 <div class="container">
+<header><div class="logo">J.A.R.V.I.S.</div><div class="online">● SYSTEM READY</div></header>
+<div class="subtitle">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+<div class="reactor"><div class="core">◉</div></div>
+<div class="status" id="status" role="status" aria-live="polite">READY FOR ACTIVATION</div>
 
-<header>
-  <div class="logo">J.A.R.V.I.S.</div>
-  <div class="online" id="connection">● SYSTEM READY</div>
-</header>
+<section class="panel"><div class="section-title">JARVIS RESPONSE</div><div class="response" id="response" aria-live="polite">Good day, Yaksh. All systems are ready.</div></section>
 
-<div class="subtitle">
-  JUST A RATHER VERY INTELLIGENT SYSTEM
+<section class="panel"><div class="section-title">COMMAND INTERFACE</div>
+<input id="command" type="text" placeholder="Type a command here..." autocomplete="off" aria-label="Enter a JARVIS command">
+<button type="button" onclick="submitCommand()">EXECUTE</button><br>
+<button type="button" class="primary" id="voiceButton" onclick="startListening()">🎙 ACTIVATE VOICE</button>
+<button type="button" class="stop" onclick="stopListening()">STOP LISTENING</button>
+<p class="small-note">Click Activate Voice once, allow microphone access, then say “Hello JARVIS”. No blank tab will be opened.</p>
+</section>
+
+<section class="panel action-panel" id="actionPanel" hidden>
+<div class="section-title">READY TO OPEN — JARVIS WILL STAY HERE</div>
+<p id="actionDescription" class="small-note">Click below to open the requested page in a separate tab.</p>
+<a id="actionLink" class="launch-link" href="https://www.google.com/" target="_blank" rel="noopener noreferrer">OPEN IN NEW TAB ↗</a>
+</section>
+
+<section class="panel"><div class="section-title">QUICK LAUNCH</div>
+<button type="button" onclick="runCommand('open google')">Google</button><button type="button" onclick="runCommand('open youtube')">YouTube</button><button type="button" onclick="runCommand('open gmail')">Gmail</button><button type="button" onclick="runCommand('open calendar')">Calendar</button><button type="button" onclick="runCommand('open drive')">Drive</button><button type="button" onclick="runCommand('open maps')">Maps</button><button type="button" onclick="runCommand('open github')">GitHub</button><button type="button" onclick="runCommand('open chatgpt')">ChatGPT</button><button type="button" onclick="runCommand('open docs')">Docs</button><button type="button" onclick="runCommand('open sheets')">Sheets</button><button type="button" onclick="runCommand('open slides')">Slides</button><button type="button" onclick="runCommand('open meet')">Meet</button><button type="button" onclick="runCommand('open spotify')">Spotify</button><button type="button" onclick="runCommand('open outlook')">Outlook</button><button type="button" onclick="runCommand('open canva')">Canva</button><button type="button" onclick="runCommand('open notion')">Notion</button>
+</section>
+
+<section class="panel"><div class="section-title">COMMAND HISTORY</div><div class="history" id="history"><p>SYSTEM: Initialized. No tabs opened.</p></div><button type="button" onclick="clearHistory()">CLEAR HISTORY</button></section>
+<section class="panel hint"><b>TRY SAYING</b><br>“Hello JARVIS”<br>“Open YouTube”<br>“Could you launch Gmail?”<br>“Search Google for BITS Pilani admission 2027”<br>“Find information about artificial intelligence”<br>“What time is it?”<br>“Open Google Drive”<br>“What can you do?”<br><br><span class="small-note">For privacy and browser security, voice commands prepare a link. Click that link to open a new tab. A web page cannot launch every installed Windows application or control Chrome itself.</span></section>
+<footer>JARVIS 3.0 | BROWSER-BASED PERSONAL ASSISTANT</footer>
 </div>
-
-<div class="reactor">
-  <div class="core">◉</div>
-</div>
-
-<div class="status" id="status">
-  READY FOR ACTIVATION
-</div>
-
-<div class="panel">
-  <div class="section-title">JARVIS RESPONSE</div>
-  <div class="response" id="response">
-    Good day, Yaksh. All systems are ready.
-  </div>
-</div>
-
-<div class="panel">
-  <div class="section-title">COMMAND INTERFACE</div>
-
-  <input id="command"
-    placeholder="Type your command here..."
-    autocomplete="off">
-
-  <button onclick="submitCommand()">EXECUTE</button>
-
-  <br>
-
-  <button class="primary" id="startButton"
-    onclick="startListening()">
-    🎙 ACTIVATE VOICE
-  </button>
-
-  <button class="stop" onclick="stopListening()">
-    STOP LISTENING
-  </button>
-</div>
-
-<div class="panel">
-  <div class="section-title">QUICK LAUNCH</div>
-
-  <button onclick="runCommand('open google')">Google</button>
-  <button onclick="runCommand('open youtube')">YouTube</button>
-  <button onclick="runCommand('open gmail')">Gmail</button>
-  <button onclick="runCommand('open calendar')">Calendar</button>
-  <button onclick="runCommand('open drive')">Drive</button>
-  <button onclick="runCommand('open maps')">Maps</button>
-  <button onclick="runCommand('open github')">GitHub</button>
-  <button onclick="runCommand('open chatgpt')">ChatGPT</button>
-  <button onclick="runCommand('open docs')">Docs</button>
-  <button onclick="runCommand('open sheets')">Sheets</button>
-  <button onclick="runCommand('open slides')">Slides</button>
-  <button onclick="runCommand('open meet')">Meet</button>
-  <button onclick="runCommand('open spotify')">Spotify</button>
-</div>
-
-<div class="panel">
-  <div class="section-title">COMMAND HISTORY</div>
-  <div class="history" id="history">
-    <p>System initialized.</p>
-  </div>
-  <button onclick="clearHistory()">CLEAR HISTORY</button>
-</div>
-
-<div class="panel hint">
-  <b>VOICE COMMAND EXAMPLES</b><br>
-  Hello JARVIS<br>
-  Open YouTube<br>
-  Can you launch Gmail?<br>
-  Search Google for artificial intelligence<br>
-  Find information about BITS Pilani<br>
-  What time is it?<br>
-  What can you do?<br>
-  Stop listening
-</div>
-
-<footer>
-JARVIS 2.0 | PERSONAL ASSISTANT | SYSTEM ONLINE
-</footer>
-
-</div>
-
 <script>
-const responseBox = document.getElementById("response");
-const statusBox = document.getElementById("status");
-const commandInput = document.getElementById("command");
-const historyBox = document.getElementById("history");
+'use strict';
+
+const responseBox = document.getElementById('response');
+const statusBox = document.getElementById('status');
+const commandInput = document.getElementById('command');
+const historyBox = document.getElementById('history');
+const actionPanel = document.getElementById('actionPanel');
+const actionLink = document.getElementById('actionLink');
+const actionDescription = document.getElementById('actionDescription');
+const voiceButton = document.getElementById('voiceButton');
 
 let recognition = null;
 let listening = false;
-let waitingForCommand = false;
 let speaking = false;
+let recognitionRunning = false;
+let waitingForCommand = false;
 let restartTimer = null;
-  let launchTab = null;
+let speechGeneration = 0;
 
 const websites = {
-  google: "https://www.google.com",
-  youtube: "https://www.youtube.com",
-  gmail: "https://mail.google.com",
-  email: "https://mail.google.com",
-  calendar: "https://calendar.google.com",
-  drive: "https://drive.google.com",
-  maps: "https://maps.google.com",
-  github: "https://github.com",
-  chatgpt: "https://chatgpt.com",
-  docs: "https://docs.google.com/document/",
-  sheets: "https://docs.google.com/spreadsheets/",
-  slides: "https://docs.google.com/presentation/",
-  meet: "https://meet.google.com",
-  forms: "https://forms.google.com",
-  photos: "https://photos.google.com",
-  contacts: "https://contacts.google.com",
-  classroom: "https://classroom.google.com",
-  keep: "https://keep.google.com",
-  translate: "https://translate.google.com",
-  news: "https://news.google.com",
-  spotify: "https://open.spotify.com",
-  instagram: "https://www.instagram.com",
-  facebook: "https://www.facebook.com",
-  whatsapp: "https://web.whatsapp.com",
-  amazon: "https://www.amazon.in",
-  netflix: "https://www.netflix.com",
-  wikipedia: "https://www.wikipedia.org",
-  reddit: "https://www.reddit.com",
-  bing: "https://www.bing.com"
+  google: 'https://www.google.com/',
+  youtube: 'https://www.youtube.com/',
+  'youtube music': 'https://music.youtube.com/',
+  gmail: 'https://mail.google.com/',
+  email: 'https://mail.google.com/',
+  calendar: 'https://calendar.google.com/',
+  drive: 'https://drive.google.com/',
+  maps: 'https://maps.google.com/',
+  github: 'https://github.com/',
+  chatgpt: 'https://chatgpt.com/',
+  docs: 'https://docs.google.com/document/',
+  sheets: 'https://docs.google.com/spreadsheets/',
+  slides: 'https://docs.google.com/presentation/',
+  forms: 'https://forms.google.com/',
+  meet: 'https://meet.google.com/',
+  photos: 'https://photos.google.com/',
+  contacts: 'https://contacts.google.com/',
+  classroom: 'https://classroom.google.com/',
+  keep: 'https://keep.google.com/',
+  translate: 'https://translate.google.com/',
+  news: 'https://news.google.com/',
+  earth: 'https://earth.google.com/web/',
+  'play store': 'https://play.google.com/store/',
+  'chrome web store': 'https://chromewebstore.google.com/',
+  spotify: 'https://open.spotify.com/',
+  instagram: 'https://www.instagram.com/',
+  facebook: 'https://www.facebook.com/',
+  whatsapp: 'https://web.whatsapp.com/',
+  telegram: 'https://web.telegram.org/',
+  discord: 'https://discord.com/app',
+  reddit: 'https://www.reddit.com/',
+  netflix: 'https://www.netflix.com/',
+  amazon: 'https://www.amazon.in/',
+  wikipedia: 'https://www.wikipedia.org/',
+  bing: 'https://www.bing.com/',
+  outlook: 'https://outlook.live.com/',
+  'microsoft 365': 'https://www.microsoft365.com/',
+  word: 'https://www.microsoft365.com/launch/word',
+  excel: 'https://www.microsoft365.com/launch/excel',
+  powerpoint: 'https://www.microsoft365.com/launch/powerpoint',
+  onedrive: 'https://onedrive.live.com/',
+  teams: 'https://teams.microsoft.com/',
+  copilot: 'https://copilot.microsoft.com/',
+  canva: 'https://www.canva.com/',
+  notion: 'https://www.notion.so/',
+  zoom: 'https://app.zoom.us/',
+  linkedin: 'https://www.linkedin.com/',
+  'google finance': 'https://www.google.com/finance/',
+  'google flights': 'https://www.google.com/travel/flights',
+  'google shopping': 'https://shopping.google.com/'
 };
 
-function addHistory(type, message) {
-  const p = document.createElement("p");
-  p.textContent = type + ": " + message;
-  historyBox.prepend(p);
+const aliases = {
+  'you tube': 'youtube',
+  'you tube music': 'youtube music',
+  'google mail': 'gmail',
+  'google calendar': 'calendar',
+  'google drive': 'drive',
+  'google maps': 'maps',
+  'google docs': 'docs',
+  'google sheets': 'sheets',
+  'google slides': 'slides',
+  'google forms': 'forms',
+  'google meet': 'meet',
+  'google photos': 'photos',
+  'google contacts': 'contacts',
+  'google classroom': 'classroom',
+  'google keep': 'keep',
+  'google translate': 'translate',
+  'google news': 'news',
+  'google earth': 'earth',
+  'google play store': 'play store',
+  'chrome store': 'chrome web store',
+  'chat gpt': 'chatgpt',
+  'whats app': 'whatsapp',
+  'ms word': 'word',
+  'ms excel': 'excel',
+  'ms powerpoint': 'powerpoint'
+};
+
+function normalize(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[’']/g, '')
+    .replace(/[^a-z0-9:/._\-\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function addHistory(label, message) {
+  const item = document.createElement('p');
+  item.textContent = label + ': ' + message;
+  historyBox.prepend(item);
+  while (historyBox.children.length > 30) {
+    historyBox.removeChild(historyBox.lastElementChild);
+  }
+}
+
+function setStatus(message) {
+  statusBox.textContent = message;
 }
 
 function speak(message) {
   responseBox.textContent = message;
-  addHistory("JARVIS", message);
+  addHistory('JARVIS', message);
 
-  if (!("speechSynthesis" in window)) return;
-
-  speechSynthesis.cancel();
-  speaking = true;
-
-  if (recognition) {
-    try { recognition.stop(); } catch(e) {}
-  }
-
-  const speech = new SpeechSynthesisUtterance(message);
-  speech.lang = "en-IN";
-  speech.rate = 0.95;
-  speech.pitch = 0.9;
-
-  speech.onend = function() {
-    speaking = false;
-    if (listening) startRecognition();
-  };
-
-  speech.onerror = function() {
-    speaking = false;
-    if (listening) startRecognition();
-  };
-
-  speechSynthesis.speak(speech);
-}
-
-function normalize(text) {
-  return text.toLowerCase()
-    .replace(/[.,!?;:'"]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function navigate(url) {
-  statusBox.textContent = "OPENING WEBSITE...";
-
-  if (launchTab && !launchTab.closed) {
-    launchTab.location.href = url;
-  } else {
-    speak("Please activate voice again to open a new browser tab.");
-  }
-}
-function searchGoogle(query) {
-  const cleanQuery = query.trim();
-
-  if (!cleanQuery) {
-    speak("What would you like me to search for?");
+  if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
     return;
   }
 
-  speak("Searching Google for " + cleanQuery);
-  navigate(
-    "https://www.google.com/search?q=" +
-    encodeURIComponent(cleanQuery)
-  );
+  const generation = ++speechGeneration;
+  window.speechSynthesis.cancel();
+  speaking = true;
+  if (recognition && recognitionRunning) {
+    try { recognition.stop(); } catch (error) { /* already stopped */ }
+  }
+
+  const utterance = new SpeechSynthesisUtterance(message);
+  utterance.lang = 'en-IN';
+  utterance.rate = 0.96;
+  utterance.pitch = 0.92;
+
+  let resumed = false;
+  const resumeListening = () => {
+    if (resumed || generation !== speechGeneration) return;
+    resumed = true;
+    speaking = false;
+    if (listening) scheduleRecognitionRestart();
+  };
+
+  utterance.onend = resumeListening;
+  utterance.onerror = resumeListening;
+  window.speechSynthesis.speak(utterance);
 }
 
-function getSearchQuery(command) {
+function scheduleRecognitionRestart() {
+  if (!listening || speaking) return;
+  clearTimeout(restartTimer);
+  restartTimer = setTimeout(() => startRecognition(), 650);
+}
+
+function showAction(url, label, description) {
+  // This is deliberately a real, visible link. Clicking it is a user gesture,
+  // so the browser can open a new tab without opening a blank tab first.
+  actionLink.href = url;
+  actionLink.textContent = 'OPEN ' + label.toUpperCase() + ' IN NEW TAB ↗';
+  actionDescription.textContent = description || 'Click the link to open this page in a separate tab. JARVIS will remain open here.';
+  actionPanel.hidden = false;
+  addHistory('ACTION READY', label + ' — ' + url);
+}
+
+function hideAction() {
+  actionPanel.hidden = true;
+  actionLink.removeAttribute('href');
+}
+
+function makeGoogleSearch(query) {
+  const cleanQuery = String(query || '').trim();
+  if (!cleanQuery) {
+    speak('What topic should I search for, Yaksh?');
+    return;
+  }
+
+  const url = 'https://www.google.com/search?q=' + encodeURIComponent(cleanQuery);
+  showAction(url, 'Google search', 'Search topic: ' + cleanQuery + '. Click to open Google results in a new tab.');
+  speak('I have prepared a Google search for ' + cleanQuery + '. Click the Open Google Search link on the screen. JARVIS will stay open.');
+  setStatus(listening ? 'LISTENING FOR HELLO JARVIS' : 'READY');
+}
+
+function removeWakeWord(text) {
+  return normalize(text)
+    .replace(/\b(hello|hey|hi) jarvis\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseSearchQuery(command) {
   const patterns = [
-    /^search(?: google)?(?: for)? /,
-    /^google search(?: for)? /,
-    /^find(?: information)?(?: about)? /,
-    /^look up /,
-    /^tell me about /,
-    /^search the web for /
+    /^(?:please )?search the web for\s+(.+)$/,
+    /^(?:please )?google search(?: for)?\s+(.+)$/,
+    /^(?:please )?search(?: on google| google)?(?: for)?\s+(.+)$/,
+    /^(?:please )?look up\s+(.+)$/,
+    /^(?:please )?find(?: me)?(?: information)?(?: about)?\s+(.+)$/,
+    /^(?:please )?tell me about\s+(.+)$/,
+    /^(?:please )?google\s+(.+)$/
   ];
 
   for (const pattern of patterns) {
-    if (pattern.test(command)) {
-      return command.replace(pattern, "").trim();
+    const match = command.match(pattern);
+    if (match) {
+      return match[1].replace(/\s+(?:on )?google$/, '').trim();
     }
+  }
+
+  if (/^(what is|whats|who is|where is|when is|why is|how does|how do|how to|which|when did|why did|what are)\b/.test(command)) {
+    return command;
   }
 
   return null;
 }
 
-function getWebsite(command) {
-  let cleaned = command
-    .replace(/\b(please|can you|could you|would you|kindly|for me|jarvis)\b/g, "")
-    .replace(/\b(open|launch|start|visit|go to|take me to|bring up|load)\b/g, "")
+function cleanOpenTarget(target) {
+  return normalize(target)
+    .replace(/^(?:the )/, '')
+    .replace(/\b(?:please|for me|now|website|web site|application|app)\b/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
-
-  const aliases = {
-    "you tube": "youtube",
-    "you tube music": "youtube",
-    "e mail": "gmail",
-    "google mail": "gmail",
-    "google calendar": "calendar",
-    "google drive": "drive",
-    "google maps": "maps",
-    "google docs": "docs",
-    "google sheets": "sheets",
-    "google slides": "slides",
-    "google meet": "meet",
-    "powerpoint": "slides",
-    "google photos": "photos",
-    "google translate": "translate",
-    "whats app": "whatsapp",
-    "chat gpt": "chatgpt"
-  };
-
-  if (aliases[cleaned]) cleaned = aliases[cleaned];
-
-  return websites[cleaned] ? cleaned : null;
 }
 
-function runCommand(rawCommand) {
-  let command = normalize(rawCommand);
+function findWebsite(command) {
+  const openPattern = /^(?:(?:can|could|would) you )?(?:please )?(?:open|launch|start|visit|load|bring up|take me to|go to)\s+(.+?)(?:\s+please)?$/;
+  const match = command.match(openPattern);
+  if (!match) return null;
 
+  let target = cleanOpenTarget(match[1]);
+  if (aliases[target]) target = aliases[target];
+
+  if (websites[target]) {
+    return { name: target, url: websites[target] };
+  }
+
+  if (target === 'google chrome' || target === 'chrome browser' || target === 'chrome') {
+    return { unsupported: 'JARVIS is already running inside Chrome. A website cannot launch or control the installed Chrome desktop application.' };
+  }
+
+  if (target === 'calculator' || target === 'google calculator') {
+    return { name: 'Google Calculator', url: 'https://www.google.com/search?q=calculator' };
+  }
+
+  if (target === 'settings' || target === 'chrome settings' || target === 'downloads' || target === 'bookmarks' || target === 'history') {
+    return { unsupported: 'Chrome internal pages cannot be opened by this GitHub website. Use the Chrome menu to access that feature.' };
+  }
+
+  // Support a regular domain typed as the target, but never accept arbitrary schemes.
+  if (/^(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[a-z0-9._~:/?#\[\]@!$&()*+,;=%-]*)?$/.test(target)) {
+    return { name: target, url: 'https://' + target };
+  }
+
+  return { search: target };
+}
+
+function executeCommand(rawCommand) {
+  const command = removeWakeWord(rawCommand);
   if (!command) {
-    speak("Please give me a command, Yaksh.");
+    speak('Yes, Yaksh. What can I do for you?');
     return;
   }
 
-  addHistory("YOU", rawCommand);
+  addHistory('YOU', rawCommand);
   commandInput.value = rawCommand;
-  statusBox.textContent = "ANALYSING COMMAND...";
+  setStatus('UNDERSTANDING COMMAND...');
 
-  // Remove wake word if included with a command.
-  command = command.replace(/\b(hello|hey|hi) jarvis\b/g, "").trim();
-
-  if (!command) {
-    speak("Yes, Yaksh. What can I do for you?");
-    return;
-  }
-
-  if (/^(stop|stop listening|goodbye jarvis|shut down listening)$/.test(command)) {
-    speak("Certainly, Yaksh. Voice listening is stopping.");
+  if (/^(stop listening|stop voice|turn off voice|stop listening jarvis)$/.test(command)) {
     stopListening();
-    return;
-  }
-
-  if (command.includes("what can you do") ||
-      command.includes("your capabilities")) {
-    speak("I can search Google, open supported websites, tell you the time and respond to voice commands. Gmail and Calendar integrations are planned.");
-    return;
-  }
-
-  if (command.includes("what time") ||
-      command === "time" ||
-      command.includes("current time")) {
-    speak("The current time is " +
-      new Date().toLocaleTimeString("en-IN"));
-    return;
-  }
-
-  if (command.includes("what date") ||
-      command.includes("today date") ||
-      command.includes("date today")) {
-    speak("Today's date is " +
-      new Date().toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }));
-    return;
-  }
-
-  if (command.includes("who are you")) {
-    speak("I am JARVIS, your personal assistant, created to help you, Yaksh.");
-    return;
-  }
-
-  if (command.includes("how are you")) {
-    speak("All systems are operational, Yaksh. Ready for your next command.");
+    speak('Voice listening has stopped, Yaksh.');
     return;
   }
 
   if (/^(hello|hey|hi)( jarvis)?$/.test(command)) {
-    speak("Hello, Yaksh. How can I help you?");
+    speak('Hello, Yaksh. How can I help you?');
     return;
   }
 
-  const searchQuery = getSearchQuery(command);
+  if (/^(what can you do|what are your capabilities|help|help me)$/.test(command)) {
+    speak('I can prepare Google searches, open supported websites in a new tab, tell you the time and date, and respond to voice commands. Gmail summaries and Calendar reading need a separate Google authorization setup.');
+    return;
+  }
 
+  if (/^(what time is it|tell me the time|current time|time)$/.test(command)) {
+    speak('The time is ' + new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }) + '.');
+    return;
+  }
+
+  if (/^(what is the date|what is todays date|todays date|date today)$/.test(command)) {
+    speak('Today is ' + new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '.');
+    return;
+  }
+
+  if (/^(who are you|what is your name)$/.test(command)) {
+    speak('I am JARVIS, your browser-based personal assistant.');
+    return;
+  }
+
+  if (/^(how are you|are you working|system status)$/.test(command)) {
+    speak('All available systems are operational, Yaksh.');
+    return;
+  }
+
+  if (/(check|read|summari[sz]e).*(gmail|email|emails)/.test(command)) {
+    const result = findWebsite('open gmail');
+    showAction(result.url, 'Gmail', 'Gmail is ready to open. Reading and summarizing messages still requires Google API authorization.');
+    speak('I can open Gmail. Automatic email summaries are not connected yet. Click the Gmail link on the screen.');
+    return;
+  }
+
+  if (/(check|show|read).*(calendar|schedule|events)/.test(command)) {
+    const result = findWebsite('open calendar');
+    showAction(result.url, 'Google Calendar', 'Calendar is ready to open. Automatic event reading still requires Google API authorization.');
+    speak('I can open your calendar. Reading your events automatically is not connected yet. Click the Calendar link on the screen.');
+    return;
+  }
+
+  const searchQuery = parseSearchQuery(command);
   if (searchQuery !== null) {
-    searchGoogle(searchQuery);
+    makeGoogleSearch(searchQuery);
     return;
   }
 
-  // Understand common search-style wording.
-  if (command.startsWith("what is ") ||
-      command.startsWith("who is ") ||
-      command.startsWith("where is ") ||
-      command.startsWith("when is ") ||
-      command.startsWith("how does ") ||
-      command.startsWith("why does ") ||
-      command.startsWith("how to ")) {
-    searchGoogle(command);
-    return;
-  }
-
-  const website = getWebsite(command);
-
+  const website = findWebsite(command);
   if (website) {
-    speak("Opening " + website + ", Yaksh.");
-    navigate(websites[website]);
-    return;
-  }
-
-  // Recognize phrases that include a website name.
-  for (const name of Object.keys(websites)) {
-    if (
-      command.includes(" " + name) &&
-      /\b(open|launch|start|visit|go to|take me to|bring up)\b/.test(command)
-    ) {
-      speak("Opening " + name + ", Yaksh.");
-      navigate(websites[name]);
+    if (website.unsupported) {
+      speak(website.unsupported);
+      setStatus(listening ? 'LISTENING FOR HELLO JARVIS' : 'READY');
       return;
     }
-  }
-
-  // Unknown command: offer a Google search.
-  speak("I could not identify that command. I will search Google for it.");
-  searchGoogle(rawCommand);
-}
-
-function submitCommand() {
-  runCommand(commandInput.value);
-}
-
-function startListening() {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    speak("Your browser does not support voice recognition. Please use Chrome.");
+    if (website.search) {
+      makeGoogleSearch(website.search);
+      return;
+    }
+    showAction(website.url, website.name, 'Click to open ' + website.name + ' in a new tab. JARVIS will remain open here.');
+    speak('I have prepared ' + website.name + '. Click the Open ' + website.name + ' link on the screen. JARVIS will stay open.');
+    setStatus(listening ? 'LISTENING FOR HELLO JARVIS' : 'READY');
     return;
   }
 
-  if (listening) return;
-  launchTab = window.open("about:blank", "_blank");
+  // Unknown spoken phrases are treated as search topics, not silently discarded.
+  makeGoogleSearch(rawCommand);
+}
 
-  listening = true;
+function processVoiceTranscript(transcript) {
+  const spoken = normalize(transcript);
+  if (!spoken) return;
+
+  if (!waitingForCommand) {
+    const wakeMatch = spoken.match(/\b(?:hello|hey|hi) jarvis\b/);
+    if (!wakeMatch) return;
+
+    const remainder = removeWakeWord(spoken);
+    if (remainder) {
+      waitingForCommand = false;
+      executeCommand(remainder);
+    } else {
+      waitingForCommand = true;
+      speak('Yes, Yaksh. What can I do for you?');
+    }
+    return;
+  }
+
   waitingForCommand = false;
+  executeCommand(spoken);
+}
 
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.continuous = true;
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 3;
+function createRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return null;
 
-  recognition.onstart = function() {
-    statusBox.textContent = "LISTENING FOR HELLO JARVIS";
+  const instance = new SpeechRecognition();
+  instance.lang = 'en-IN';
+  instance.continuous = true;
+  instance.interimResults = false;
+  instance.maxAlternatives = 3;
+
+  instance.onstart = () => {
+    recognitionRunning = true;
+    setStatus(waitingForCommand ? 'READY FOR YOUR COMMAND' : 'LISTENING FOR HELLO JARVIS');
   };
 
-  recognition.onresult = function(event) {
+  instance.onresult = event => {
     const result = event.results[event.results.length - 1];
-
-    if (!result.isFinal || speaking) return;
-
-    const transcript = normalize(result[0].transcript);
-
-    if (!waitingForCommand) {
-      if (
-        transcript.includes("hello jarvis") ||
-        transcript.includes("hey jarvis") ||
-        transcript.includes("hi jarvis")
-      ) {
-        waitingForCommand = true;
-        speak("Yes, Yaksh. What can I do for you?");
-      }
-      return;
+    if (result && result.isFinal && !speaking) {
+      processVoiceTranscript(result[0].transcript);
     }
-
-    waitingForCommand = false;
-    runCommand(transcript);
   };
 
-  recognition.onerror = function(event) {
-    if (event.error === "not-allowed" ||
-        event.error === "service-not-allowed") {
+  instance.onerror = event => {
+    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
       listening = false;
-      statusBox.textContent = "MICROPHONE ACCESS DENIED";
-      return;
+      voiceButton.textContent = '🎙 ACTIVATE VOICE';
+      setStatus('MICROPHONE PERMISSION DENIED');
+      responseBox.textContent = 'Allow microphone access for this website in Chrome site settings, then activate voice again.';
+    } else if (event.error === 'audio-capture') {
+      setStatus('MICROPHONE NOT FOUND');
     }
-
-    if (event.error === "audio-capture") {
-      statusBox.textContent = "MICROPHONE NOT FOUND";
-    }
+    // no-speech and transient network errors are allowed to recover through onend.
   };
 
-  recognition.onend = function() {
-    if (listening && !speaking) {
-      clearTimeout(restartTimer);
-      restartTimer = setTimeout(startRecognition, 700);
-    }
+  instance.onend = () => {
+    recognitionRunning = false;
+    if (listening && !speaking) scheduleRecognitionRestart();
   };
 
-  startRecognition();
+  return instance;
 }
 
 function startRecognition() {
-  if (!listening || speaking || !recognition) return;
-
+  if (!listening || speaking || recognitionRunning || !recognition) return;
   try {
     recognition.start();
-  } catch(e) {
-    // Ignore if recognition is already running.
+    recognitionRunning = true;
+  } catch (error) {
+    recognitionRunning = false;
+    scheduleRecognitionRestart();
   }
+}
+
+function startListening() {
+  if (listening) return;
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    speak('Voice recognition is not available in this browser. Please use a recent version of Google Chrome.');
+    return;
+  }
+
+  clearTimeout(restartTimer);
+  recognition = createRecognition();
+  if (!recognition) {
+    speak('I could not start voice recognition.');
+    return;
+  }
+
+  listening = true;
+  waitingForCommand = false;
+  voiceButton.textContent = '🎙 VOICE ACTIVE';
+  setStatus('STARTING MICROPHONE...');
+  startRecognition();
 }
 
 function stopListening() {
   listening = false;
   waitingForCommand = false;
   clearTimeout(restartTimer);
-
-  if (recognition) {
-    try { recognition.stop(); } catch(e) {}
+  if (recognition && recognitionRunning) {
+    try { recognition.stop(); } catch (error) { /* already stopped */ }
   }
+  recognitionRunning = false;
+  voiceButton.textContent = '🎙 ACTIVATE VOICE';
+  setStatus('VOICE SYSTEM OFF');
+}
 
-  statusBox.textContent = "VOICE SYSTEM OFF";
+function submitCommand() {
+  const value = commandInput.value.trim();
+  if (!value) {
+    speak('Please type a command, Yaksh.');
+    return;
+  }
+  waitingForCommand = false;
+  executeCommand(value);
+}
+
+function runCommand(command) {
+  waitingForCommand = false;
+  executeCommand(command);
 }
 
 function clearHistory() {
-  historyBox.innerHTML = "<p>History cleared.</p>";
+  historyBox.textContent = '';
+  addHistory('SYSTEM', 'History cleared.');
 }
 
-commandInput.addEventListener("keydown", function(event) {
-  if (event.key === "Enter") submitCommand();
+commandInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter') submitCommand();
 });
+
+// Initial state: no microphone and no tabs are opened until the user chooses.
+setStatus('READY FOR ACTIVATION');
 
 </script>
 </body>
